@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Brain, Menu, X } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -15,6 +16,8 @@ const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <header 
@@ -29,9 +32,9 @@ const Header: React.FC = () => {
           {/* Logo */}
           <Link 
             to="/" 
-            className="flex items-center space-x-2 shrink-0"
+            className="flex items-center space-x-2 shrink-0 group"
           >
-            <Brain className="h-8 w-8 text-blue-500" />
+            <Brain className="h-8 w-8 text-blue-500 transition-transform duration-300 group-hover:scale-110" />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
               InvestMinD
             </span>
@@ -42,23 +45,23 @@ const Header: React.FC = () => {
             <li>
               <Link 
                 to="/" 
-                className="text-gray-300 hover:text-white transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-blue-500 after:transition-all"
+                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive('/') 
+                    ? 'text-white bg-gray-800' 
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                }`}
               >
                 Home
               </Link>
             </li>
             <li>
               <Link 
-                to="#" 
-                className="text-gray-300 hover:text-white transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-blue-500 after:transition-all"
-              >
-                Markets
-              </Link>
-            </li>
-            <li>
-              <Link 
                 to="/portfolio" 
-                className="text-gray-300 hover:text-white transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-blue-500 after:transition-all"
+                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive('/portfolio') 
+                    ? 'text-white bg-gray-800' 
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                }`}
               >
                 Portfolio
               </Link>
@@ -69,7 +72,7 @@ const Header: React.FC = () => {
           <div className="hidden md:block">
             <button
               onClick={() => navigate('/auth')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-colors font-medium shadow-lg hover:shadow-blue-500/25"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95"
             >
               Sign In
             </button>
@@ -78,7 +81,8 @@ const Header: React.FC = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
+            className="md:hidden p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-gray-800/50"
+            aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
               <X className="h-6 w-6" />
@@ -97,11 +101,15 @@ const Header: React.FC = () => {
           }`}
         >
           <div className="py-4 space-y-4">
-            <ul className="space-y-4">
+            <ul className="space-y-2">
               <li>
                 <Link 
                   to="/" 
-                  className="block text-gray-300 hover:text-white transition-colors"
+                  className={`block px-4 py-2 rounded-lg transition-all duration-300 ${
+                    isActive('/') 
+                      ? 'text-white bg-gray-800' 
+                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Home
@@ -109,17 +117,12 @@ const Header: React.FC = () => {
               </li>
               <li>
                 <Link 
-                  to="#" 
-                  className="block text-gray-300 hover:text-white transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Markets
-                </Link>
-              </li>
-              <li>
-                <Link 
                   to="/portfolio" 
-                  className="block text-gray-300 hover:text-white transition-colors"
+                  className={`block px-4 py-2 rounded-lg transition-all duration-300 ${
+                    isActive('/portfolio') 
+                      ? 'text-white bg-gray-800' 
+                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Portfolio
@@ -131,7 +134,7 @@ const Header: React.FC = () => {
                 navigate('/auth');
                 setIsMobileMenuOpen(false);
               }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-colors font-medium shadow-lg hover:shadow-blue-500/25"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95"
             >
               Sign In
             </button>
