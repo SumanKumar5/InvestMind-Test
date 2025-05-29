@@ -1,9 +1,12 @@
 import React from 'react';
 import { Brain } from 'lucide-react';
+import Header from './Header';
+import Footer from './Footer';
 
 const Portfolio: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
+      <Header />
       <div className="flex-grow container mx-auto px-4 py-24">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-3 mb-8">
@@ -18,6 +21,7 @@ const Portfolio: React.FC = () => {
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
