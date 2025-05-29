@@ -43,30 +43,43 @@ export const fetchTopStocks = async (): Promise<MarketData[]> => {
   const symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA'];
   const stocksData = await Promise.all(
     symbols.map(async (symbol, index) => {
-      const response = await axios.get(`${ALPHA_VANTAGE_API}`, {
-        params: {
-          function: 'GLOBAL_QUOTE',
-          symbol,
-          apikey: ALPHA_VANTAGE_KEY
-        }
-      });
+      try {
+        const response = await axios.get(`${ALPHA_VANTAGE_API}`, {
+          params: {
+            function: 'GLOBAL_QUOTE',
+            symbol,
+            apikey: ALPHA_VANTAGE_KEY
+          }
+        });
 
-      const quote = response.data['Global Quote'];
-      return {
-        id: symbol.toLowerCase(),
-        rank: index + 1,
-        symbol,
-        name: getStockName(symbol), // Added company names
-        type: 'stock',
-        price: parseFloat(quote['05. price']),
-        priceChange24h: parseFloat(quote['10. change percent'].replace('%', '')),
-        marketCap: 0, // Alpha Vantage basic API doesn't provide market cap
-        volume: parseFloat(quote['06. volume'])
-      };
+        const quote = response.data['Global Quote'];
+        
+        // Check if we received valid data from the API
+        if (!quote || !quote['05. price']) {
+          console.warn(`Invalid or missing data for symbol ${symbol}. This might be due to API rate limits.`);
+          return null;
+        }
+
+        return {
+          id: symbol.toLowerCase(),
+          rank: index + 1,
+          symbol,
+          name: getStockName(symbol),
+          type: 'stock',
+          price: parseFloat(quote['05. price']),
+          priceChange24h: parseFloat(quote['10. change percent'].replace('%', '')),
+          marketCap: 0,
+          volume: parseFloat(quote['06. volume'])
+        };
+      } catch (error) {
+        console.error(`Error fetching data for ${symbol}:`, error);
+        return null;
+      }
     })
   );
 
-  return stocksData;
+  // Filter out any null values from failed requests
+  return stocksData.filter((stock): stock is MarketData => stock !== null);
 };
 
 // Helper function to get company names
