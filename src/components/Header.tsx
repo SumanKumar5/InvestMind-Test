@@ -7,21 +7,17 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // Initialize with the current auth state
+    return !!localStorage.getItem('investmind_token');
+  });
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
-    const checkAuthStatus = () => {
-      const token = localStorage.getItem('investmind_token');
-      setIsLoggedIn(!!token);
-    };
-
     window.addEventListener('scroll', handleScroll);
-    checkAuthStatus();
-    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
