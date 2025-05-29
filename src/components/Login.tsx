@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Brain, X } from 'lucide-react';
+import { login } from '../services/api';
+import { useAuth } from '../hooks/useAuth';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  useAuth(); // Redirect if already logged in
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -22,16 +27,14 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any email/password combination
-      // In a real app, you would validate credentials with your backend
-      
-      // Redirect to dashboard after successful login
-      navigate('/dashboard');
-    } catch (err) {
-      setError('Invalid email or password');
+      const { token } = await login(email, password);
+      localStorage.setItem('investmind_token', token);
+      toast.success('Login successful!');
+      navigate('/portfolio');
+    } catch (err: any) {
+      const message = err.response?.data?.message || 'Invalid email or password';
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -39,6 +42,8 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex">
+      <Toaster position="top-right" />
+      
       {/* Close Button - Fixed Position */}
       <button
         onClick={() => navigate('/')}

@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Brain, X } from 'lucide-react';
+import { signup } from '../services/api';
+import { useAuth } from '../hooks/useAuth';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
+  useAuth(); // Redirect if already logged in
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -48,16 +53,14 @@ const Signup: React.FC = () => {
     setError('');
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any valid form submission
-      // In a real app, you would send the data to your backend
-      
-      // Redirect to dashboard after successful signup
-      navigate('/dashboard');
-    } catch (err) {
-      setError('An error occurred during signup. Please try again.');
+      const { token } = await signup(formData.fullName, formData.email, formData.password);
+      localStorage.setItem('investmind_token', token);
+      toast.success('Account created successfully!');
+      navigate('/portfolio');
+    } catch (err: any) {
+      const message = err.response?.data?.message || 'An error occurred during signup';
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -65,6 +68,8 @@ const Signup: React.FC = () => {
 
   return (
     <div className="min-h-screen flex">
+      <Toaster position="top-right" />
+      
       {/* Close Button - Fixed Position */}
       <button
         onClick={() => navigate('/')}

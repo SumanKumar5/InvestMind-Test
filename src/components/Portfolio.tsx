@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Brain } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
+import { useRequireAuth } from '../hooks/useAuth';
 
 const Portfolio: React.FC = () => {
+  useRequireAuth(); // Redirect to login if not authenticated
+
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
       <Header />
