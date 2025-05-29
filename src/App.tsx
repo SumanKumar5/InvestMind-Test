@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import AssetTable from './components/AssetTable';
 import Features from './components/Features';
+import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Hero />
         <AssetTable />
         <Features />
+        <Testimonials />
       </main>
       <Footer />
     </div>
