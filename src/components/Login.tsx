@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Brain, X } from 'lucide-react';
+import { Eye, EyeOff, Brain, X, CheckCircle2 } from 'lucide-react';
 import { login } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
 import toast, { Toaster } from 'react-hot-toast';
@@ -29,12 +29,59 @@ const Login: React.FC = () => {
     try {
       const { token } = await login(email, password);
       localStorage.setItem('investmind_token', token);
-      toast.success('Login successful!');
-      navigate('/portfolio');
+      
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? 'animate-enter' : 'animate-leave'
+          } toast-success max-w-md w-full bg-gray-800/95 shadow-lg rounded-lg pointer-events-auto flex items-center p-4`}
+        >
+          <div className="flex-shrink-0 text-green-400">
+            <CheckCircle2 className="h-6 w-6" />
+          </div>
+          <div className="ml-3 flex-1">
+            <p className="text-sm font-medium text-gray-100">
+              Welcome back! Login successful.
+            </p>
+          </div>
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-300"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+      ), { duration: 3000 });
+
+      // Short delay to show the success message
+      setTimeout(() => {
+        navigate('/portfolio');
+      }, 500);
     } catch (err: any) {
       const message = err.response?.data?.message || 'Invalid email or password';
       setError(message);
-      toast.error(message);
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? 'animate-enter' : 'animate-leave'
+          } toast-error max-w-md w-full bg-gray-800/95 shadow-lg rounded-lg pointer-events-auto flex items-center p-4`}
+        >
+          <div className="flex-shrink-0 text-red-400">
+            <X className="h-6 w-6" />
+          </div>
+          <div className="ml-3 flex-1">
+            <p className="text-sm font-medium text-gray-100">
+              {message}
+            </p>
+          </div>
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-300"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+      ), { duration: 4000 });
     } finally {
       setIsLoading(false);
     }
@@ -42,7 +89,13 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex">
-      <Toaster position="top-right" />
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          className: 'bg-transparent border-0 shadow-none p-0 m-0'
+        }}
+      />
       
       {/* Close Button - Fixed Position */}
       <button
