@@ -1,19 +1,38 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react';
 import { formatCurrency, formatLargeNumber, formatPercentage } from '../utils/formatters';
-import { mockAssets } from '../data/mockAssets';
-import { Asset } from '../types/asset';
+import { getTopStocks, StockQuote } from '../services/twelveData';
 import SearchBar from './SearchBar';
 import FilterTabs from './FilterTabs';
 
-type SortField = 'rank' | 'name' | 'price' | 'priceChange24h' | 'marketCap' | 'volume';
+type SortField = 'symbol' | 'name' | 'price' | 'change' | 'volume';
 type SortDirection = 'asc' | 'desc';
 
 const AssetTable: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'stocks' | 'crypto' | 'funds'>('all');
-  const [sortField, setSortField] = useState<SortField>('rank');
+  const [sortField, setSortField] = useState<SortField>('symbol');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [assets, setAssets] = useState<StockQuote[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getTopStocks();
+        setAssets(data);
+        setError(null);
+      } catch (err) {
+        setError('Failed to fetch market data');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -25,67 +44,45 @@ const AssetTable: React.FC = () => {
   };
 
   const filteredAssets = useMemo(() => {
-    return mockAssets
+    return assets
       .filter((asset) => {
         const matchesSearch = asset.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             asset.symbol.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesType = activeFilter === 'all' || 
-                         (activeFilter === 'stocks' && asset.type === 'stock') ||
-                         (activeFilter === 'crypto' && asset.type === 'crypto') ||
-                         (activeFilter === 'funds' && asset.type === 'fund');
-        return matchesSearch && matchesType;
+        return matchesSearch;
       })
       .sort((a, b) => {
-        if (sortField === 'name') {
+        if (sortField === 'name' || sortField === 'symbol') {
           return sortDirection === 'asc' 
-            ? a.name.localeCompare(b.name) 
-            : b.name.localeCompare(a.name);
+            ? a[sortField].localeCompare(b[sortField]) 
+            : b[sortField].localeCompare(a[sortField]);
         } else {
           const aValue = a[sortField];
           const bValue = b[sortField];
           return sortDirection === 'asc' ? (aValue - bValue) : (bValue - aValue);
         }
       });
-  }, [searchQuery, activeFilter, sortField, sortDirection]);
+  }, [searchQuery, sortField, sortDirection, assets]);
 
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) return null;
     return sortDirection === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />;
   };
 
-  // Mobile card view component
-  const AssetCard = ({ asset }: { asset: Asset }) => (
-    <div className="asset-card">
-      <div className="asset-card-header">
-        <div className="flex items-center space-x-3">
-          <span className="text-gray-400">#{asset.rank}</span>
-          <div className="bg-gray-700 rounded-md py-1 px-2">
-            <span className="text-sm font-semibold text-gray-200">{asset.symbol}</span>
-          </div>
-        </div>
-        <span className={`font-mono ${
-          asset.priceChange24h >= 0 ? 'text-green-500' : 'text-red-500'
-        }`}>
-          {formatPercentage(asset.priceChange24h)}
-        </span>
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
-      <div className="asset-card-body">
-        <h3 className="text-lg font-medium text-gray-200">{asset.name}</h3>
-        <div className="asset-stat">
-          <span className="text-gray-400">Price</span>
-          <span className="font-mono">{formatCurrency(asset.price)}</span>
-        </div>
-        <div className="asset-stat">
-          <span className="text-gray-400">Market Cap</span>
-          <span className="font-mono">{formatCurrency(asset.marketCap).split('.')[0]}</span>
-        </div>
-        <div className="asset-stat">
-          <span className="text-gray-400">Volume</span>
-          <span className="font-mono">{formatLargeNumber(asset.volume)}</span>
-        </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-20 text-red-500">
+        <p>{error}</p>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
     <section className="py-16 container mx-auto px-4">
@@ -104,67 +101,83 @@ const AssetTable: React.FC = () => {
             </div>
           </div>
           
-          {/* Desktop Table View */}
-          <div className="hidden md:block bg-gray-800 rounded-xl overflow-hidden shadow-xl border border-gray-700">
+          <div className="bg-gray-800 rounded-xl overflow-hidden shadow-xl border border-gray-700">
             <div className="responsive-table">
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-800/90 backdrop-blur-sm border-b border-gray-700">
-                    {[
-                      { field: 'rank' as SortField, label: 'Rank' },
-                      { field: null, label: 'Symbol' },
-                      { field: 'name' as SortField, label: 'Asset Name' },
-                      { field: 'price' as SortField, label: 'Price (USD)' },
-                      { field: 'priceChange24h' as SortField, label: '24h Change' },
-                      { field: 'marketCap' as SortField, label: 'Market Cap' },
-                      { field: 'volume' as SortField, label: 'Volume' }
-                    ].map((column) => (
-                      <th 
-                        key={column.label}
-                        className={`px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider ${
-                          column.field ? 'cursor-pointer hover:text-white transition-colors' : ''
-                        }`}
-                        onClick={() => column.field && handleSort(column.field)}
-                      >
-                        <div className="flex items-center space-x-1">
-                          <span>{column.label}</span>
-                          {column.field && <SortIcon field={column.field} />}
-                        </div>
-                      </th>
-                    ))}
+                    <th 
+                      className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer hover:text-white transition-colors"
+                      onClick={() => handleSort('symbol')}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>Symbol</span>
+                        <SortIcon field="symbol" />
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer hover:text-white transition-colors"
+                      onClick={() => handleSort('name')}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>Name</span>
+                        <SortIcon field="name" />
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer hover:text-white transition-colors"
+                      onClick={() => handleSort('price')}
+                    >
+                      <div className="flex items-center justify-end space-x-1">
+                        <span>Price</span>
+                        <SortIcon field="price" />
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer hover:text-white transition-colors"
+                      onClick={() => handleSort('change')}
+                    >
+                      <div className="flex items-center justify-end space-x-1">
+                        <span>24h Change</span>
+                        <SortIcon field="change" />
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer hover:text-white transition-colors"
+                      onClick={() => handleSort('volume')}
+                    >
+                      <div className="flex items-center justify-end space-x-1">
+                        <span>Volume</span>
+                        <SortIcon field="volume" />
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-700">
                   {filteredAssets.map((asset) => (
                     <tr 
-                      key={asset.id}
-                      className="table-row-hover hover:bg-gray-750 group cursor-pointer"
+                      key={asset.symbol}
+                      className="hover:bg-gray-750 transition-colors cursor-pointer"
                     >
-                      <td className="px-6 py-4 text-sm font-medium text-gray-300">
-                        {asset.rank}
-                      </td>
                       <td className="px-6 py-4">
                         <div className="bg-gray-700 rounded-md py-1 px-2 inline-block">
-                          <span className="text-sm font-semibold text-gray-200">{asset.symbol}</span>
+                          <span className="font-medium">{asset.symbol}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-300 font-medium">
+                      <td className="px-6 py-4 text-gray-300">
                         {asset.name}
                       </td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-300 font-mono">
+                      <td className="px-6 py-4 text-right font-mono">
                         {formatCurrency(asset.price)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-right font-medium">
+                      <td className="px-6 py-4 text-right">
                         <span className={`${
-                          asset.priceChange24h >= 0 ? 'text-green-500' : 'text-red-500'
+                          asset.change >= 0 ? 'text-green-500' : 'text-red-500'
                         } font-mono`}>
-                          {formatPercentage(asset.priceChange24h)}
+                          {formatPercentage(asset.change)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-300 font-mono">
-                        {formatCurrency(asset.marketCap).split('.')[0]}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-300 font-mono">
+                      <td className="px-6 py-4 text-right font-mono">
                         {formatLargeNumber(asset.volume)}
                       </td>
                     </tr>
@@ -172,13 +185,6 @@ const AssetTable: React.FC = () => {
                 </tbody>
               </table>
             </div>
-          </div>
-
-          {/* Mobile Card View */}
-          <div className="md:hidden space-y-4">
-            {filteredAssets.map((asset) => (
-              <AssetCard key={asset.id} asset={asset} />
-            ))}
           </div>
 
           {filteredAssets.length === 0 && (
