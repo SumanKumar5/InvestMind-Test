@@ -6,6 +6,7 @@ import AssetTable from './components/AssetTable';
 import Features from './components/Features';
 import Footer from './components/Footer';
 import Auth from './components/Auth';
+import Portfolio from './components/Portfolio';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/portfolio" element={<Portfolio />} />
           <Route
             path="/"
             element={
