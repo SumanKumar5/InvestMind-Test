@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Brain, Menu, X, CheckCircle2 } from 'lucide-react';
+import { Brain, Menu, X, CheckCircle2, LogOut } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -10,14 +10,27 @@ const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const handleLogoClick = () => {
@@ -31,34 +44,31 @@ const Header: React.FC = () => {
     }
   };
 
-  const handleAuthAction = () => {
-    if (user) {
-      logout();
-      toast.custom((t) => (
-        <div
-          className={`${
-            t.visible ? 'animate-enter' : 'animate-leave'
-          } toast-success max-w-md w-full bg-gray-800/95 shadow-lg rounded-lg pointer-events-auto flex items-center p-4`}
-        >
-          <div className="flex-shrink-0 text-green-400">
-            <CheckCircle2 className="h-6 w-6" />
-          </div>
-          <div className="ml-3 flex-1">
-            <p className="text-sm font-medium text-gray-100">
-              Successfully signed out!
-            </p>
-          </div>
-          <button
-            onClick={() => toast.dismiss(t.id)}
-            className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-300"
-          >
-            <X className="h-5 w-5" />
-          </button>
+  const handleSignOut = () => {
+    setIsDropdownOpen(false);
+    logout();
+    toast.custom((t) => (
+      <div
+        className={`${
+          t.visible ? 'animate-enter' : 'animate-leave'
+        } toast-success max-w-md w-full bg-gray-800/95 shadow-lg rounded-lg pointer-events-auto flex items-center p-4`}
+      >
+        <div className="flex-shrink-0 text-green-400">
+          <CheckCircle2 className="h-6 w-6" />
         </div>
-      ), { duration: 3000 });
-    } else {
-      navigate('/login');
-    }
+        <div className="ml-3 flex-1">
+          <p className="text-sm font-medium text-gray-100">
+            Successfully signed out!
+          </p>
+        </div>
+        <button
+          onClick={() => toast.dismiss(t.id)}
+          className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-300"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+    ), { duration: 3000 });
   };
 
   return (
@@ -110,18 +120,43 @@ const Header: React.FC = () => {
             </div>
             
             {user ? (
-              <button
-                onClick={handleAuthAction}
-                className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center hover:bg-blue-700 transition-colors duration-300"
-                title="Sign Out"
-              >
-                <span className="text-sm font-medium text-white">
-                  {user.name.split(' ').map(n => n[0]).join('')}
-                </span>
-              </button>
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center hover:bg-blue-700 transition-colors duration-300"
+                  title={user.name}
+                >
+                  <span className="text-sm font-medium text-white">
+                    {user.name.split(' ').map(n => n[0]).join('')}
+                  </span>
+                </button>
+
+                {/* Dropdown Menu */}
+                <div
+                  className={`absolute right-0 mt-2 w-48 rounded-lg bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-200 ${
+                    isDropdownOpen
+                      ? 'transform opacity-100 scale-100'
+                      : 'transform opacity-0 scale-95 pointer-events-none'
+                  }`}
+                >
+                  <div className="p-3 border-b border-gray-700">
+                    <p className="text-sm font-medium text-white">{user.name}</p>
+                    <p className="text-xs text-gray-400">{user.email}</p>
+                  </div>
+                  <div className="p-1">
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full flex items-center px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition-colors duration-150"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              </div>
             ) : (
               <button 
-                onClick={handleAuthAction}
+                onClick={() => navigate('/login')}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95"
               >
                 Sign In
@@ -187,19 +222,25 @@ const Header: React.FC = () => {
                 </button>
               )}
             </div>
-            <button 
-              onClick={() => {
-                handleAuthAction();
-                setIsMobileMenuOpen(false);
-              }}
-              className={`w-full ${
-                user 
-                  ? 'bg-gray-700 hover:bg-gray-600' 
-                  : 'bg-blue-600 hover:bg-blue-700'
-              } text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95`}
-            >
-              {user ? 'Sign Out' : 'Sign In'}
-            </button>
+            {user ? (
+              <button 
+                onClick={handleSignOut}
+                className="w-full bg-gray-700 hover:bg-gray-600 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95 flex items-center justify-center"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </button>
+            ) : (
+              <button 
+                onClick={() => {
+                  navigate('/login');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </div>
