@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react';
+import { ChevronDown, ChevronUp, SlidersHorizontal, Briefcase, Bitcoin, LineChart, BarChart4 } from 'lucide-react';
 import { formatCurrency, formatLargeNumber, formatPercentage } from '../utils/formatters';
 import { mockAssets } from '../data/mockAssets';
 import { Asset } from '../types/asset';
@@ -21,6 +21,19 @@ const AssetTable: React.FC = () => {
     } else {
       setSortField(field);
       setSortDirection('asc');
+    }
+  };
+
+  const getAssetIcon = (type: string, className: string = "h-5 w-5") => {
+    switch (type) {
+      case 'stock':
+        return <Briefcase className={className} aria-hidden="true" />;
+      case 'crypto':
+        return <Bitcoin className={className} aria-hidden="true" />;
+      case 'fund':
+        return <BarChart4 className={className} aria-hidden="true" />;
+      default:
+        return <LineChart className={className} aria-hidden="true" />;
     }
   };
 
@@ -55,12 +68,15 @@ const AssetTable: React.FC = () => {
 
   // Mobile card view component
   const AssetCard = ({ asset }: { asset: Asset }) => (
-    <div className="asset-card">
-      <div className="asset-card-header">
+    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-3">
           <span className="text-gray-400">#{asset.rank}</span>
-          <div className="bg-gray-700 rounded-md py-1 px-2">
-            <span className="text-sm font-semibold text-gray-200">{asset.symbol}</span>
+          <div className="flex items-center space-x-2">
+            {getAssetIcon(asset.type, "h-5 w-5 text-gray-400")}
+            <div className="bg-gray-700 rounded-md py-1 px-2">
+              <span className="text-sm font-semibold text-gray-200">{asset.symbol}</span>
+            </div>
           </div>
         </div>
         <span className={`font-mono ${
@@ -69,17 +85,17 @@ const AssetTable: React.FC = () => {
           {formatPercentage(asset.priceChange24h)}
         </span>
       </div>
-      <div className="asset-card-body">
+      <div className="space-y-2">
         <h3 className="text-lg font-medium text-gray-200">{asset.name}</h3>
-        <div className="asset-stat">
+        <div className="flex justify-between">
           <span className="text-gray-400">Price</span>
           <span className="font-mono">{formatCurrency(asset.price)}</span>
         </div>
-        <div className="asset-stat">
+        <div className="flex justify-between">
           <span className="text-gray-400">Market Cap</span>
           <span className="font-mono">{formatCurrency(asset.marketCap).split('.')[0]}</span>
         </div>
-        <div className="asset-stat">
+        <div className="flex justify-between">
           <span className="text-gray-400">Volume</span>
           <span className="font-mono">{formatLargeNumber(asset.volume)}</span>
         </div>
@@ -138,14 +154,17 @@ const AssetTable: React.FC = () => {
                   {filteredAssets.map((asset) => (
                     <tr 
                       key={asset.id}
-                      className="table-row-hover hover:bg-gray-750 group cursor-pointer"
+                      className="hover:bg-gray-750 group cursor-pointer"
                     >
                       <td className="px-6 py-4 text-sm font-medium text-gray-300">
                         {asset.rank}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="bg-gray-700 rounded-md py-1 px-2 inline-block">
-                          <span className="text-sm font-semibold text-gray-200">{asset.symbol}</span>
+                        <div className="flex items-center space-x-2">
+                          {getAssetIcon(asset.type, "h-5 w-5 text-gray-400 group-hover:text-gray-300 transition-colors")}
+                          <div className="bg-gray-700 rounded-md py-1 px-2">
+                            <span className="text-sm font-semibold text-gray-200">{asset.symbol}</span>
+                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-300 font-medium">
