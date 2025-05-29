@@ -18,43 +18,43 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom cursor */
-.custom-cursor {
-  @apply fixed w-8 h-8 rounded-full pointer-events-none z-50 mix-blend-difference bg-white transform -translate-x-1/2 -translate-y-1/2;
-  transition: transform 0.2s ease-out;
-}
-
-/* Button styles */
-.btn-primary {
-  @apply relative overflow-hidden transition-all duration-500 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none;
-  background: var(--primary);
-}
-
-.btn-primary:hover {
-  background: var(--primary-dark);
-}
-
-/* Magnetic effect */
-.magnetic {
-  @apply transition-transform duration-500;
-}
-
-/* Text reveal animation */
-.reveal-text {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-  @apply opacity-0 translate-y-8 animate-reveal;
-}
-
-@keyframes reveal {
-  from {
-    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
-    opacity: 0;
-    transform: translateY(100px);
+@layer components {
+  /* Custom cursor */
+  .custom-cursor {
+    @apply fixed w-8 h-8 rounded-full pointer-events-none z-50 mix-blend-difference bg-white transform -translate-x-1/2 -translate-y-1/2;
+    transition: transform 0.2s ease-out;
   }
-  to {
+
+  /* Button styles */
+  .btn-primary {
+    @apply relative overflow-hidden transition-all duration-500 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none;
+    background: var(--primary);
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-dark);
+  }
+
+  /* Magnetic effect */
+  .magnetic {
+    @apply transition-transform duration-500;
+  }
+
+  /* Text reveal animation */
+  .reveal-text {
+    @apply opacity-0 translate-y-8 animate-reveal;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-    opacity: 1;
-    transform: translateY(0);
+  }
+
+  /* Card hover effects */
+  .hover-card {
+    @apply transition-all duration-500;
+    background: linear-gradient(to bottom right, rgba(94, 23, 235, 0.1), rgba(0, 0, 0, 0));
+  }
+
+  .hover-card:hover {
+    background: linear-gradient(to bottom right, rgba(94, 23, 235, 0.2), rgba(0, 0, 0, 0));
+    transform: translateY(-10px);
   }
 }
 
@@ -68,17 +68,6 @@ html {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-
-/* Card hover effects */
-.hover-card {
-  @apply transition-all duration-500;
-  background: linear-gradient(to bottom right, rgba(94, 23, 235, 0.1), rgba(0, 0, 0, 0));
-}
-
-.hover-card:hover {
-  background: linear-gradient(to bottom right, rgba(94, 23, 235, 0.2), rgba(0, 0, 0, 0));
-  transform: translateY(-10px);
 }
 
 /* Custom scrollbar */
