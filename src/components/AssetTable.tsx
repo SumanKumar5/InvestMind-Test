@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronDown, ChevronUp, SlidersHorizontal, Briefcase, Bitcoin, LineChart, BarChart4 } from 'lucide-react';
+import { ChevronDown, ChevronUp, SlidersHorizontal, Apple, Microsoft, Bitcoin, Google, Ethereum, LineChart, Banknote, Car, Sun } from 'lucide-react';
 import { formatCurrency, formatLargeNumber, formatPercentage } from '../utils/formatters';
 import { mockAssets } from '../data/mockAssets';
 import { Asset } from '../types/asset';
@@ -24,14 +24,25 @@ const AssetTable: React.FC = () => {
     }
   };
 
-  const getAssetIcon = (type: string, className: string = "h-5 w-5") => {
-    switch (type) {
-      case 'stock':
-        return <Briefcase className={className} aria-hidden="true" />;
-      case 'crypto':
+  const getAssetIcon = (symbol: string, type: string, className: string = "h-5 w-5") => {
+    switch (symbol) {
+      case 'AAPL':
+        return <Apple className={className} aria-hidden="true" />;
+      case 'MSFT':
+        return <Microsoft className={className} aria-hidden="true" />;
+      case 'BTC':
         return <Bitcoin className={className} aria-hidden="true" />;
-      case 'fund':
-        return <BarChart4 className={className} aria-hidden="true" />;
+      case 'GOOGL':
+        return <Google className={className} aria-hidden="true" />;
+      case 'ETH':
+        return <Ethereum className={className} aria-hidden="true" />;
+      case 'VFIAX':
+      case 'FXAIX':
+        return <Banknote className={className} aria-hidden="true" />;
+      case 'TSLA':
+        return <Car className={className} aria-hidden="true" />;
+      case 'SOL':
+        return <Sun className={className} aria-hidden="true" />;
       default:
         return <LineChart className={className} aria-hidden="true" />;
     }
@@ -73,7 +84,7 @@ const AssetTable: React.FC = () => {
         <div className="flex items-center space-x-3">
           <span className="text-gray-400">#{asset.rank}</span>
           <div className="flex items-center space-x-2">
-            {getAssetIcon(asset.type, "h-5 w-5 text-gray-400")}
+            {getAssetIcon(asset.symbol, asset.type, "h-5 w-5 text-gray-400")}
             <div className="bg-gray-700 rounded-md py-1 px-2">
               <span className="text-sm font-semibold text-gray-200">{asset.symbol}</span>
             </div>
@@ -161,7 +172,7 @@ const AssetTable: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-2">
-                          {getAssetIcon(asset.type, "h-5 w-5 text-gray-400 group-hover:text-gray-300 transition-colors")}
+                          {getAssetIcon(asset.symbol, asset.type, "h-5 w-5 text-gray-400 group-hover:text-gray-300 transition-colors")}
                           <div className="bg-gray-700 rounded-md py-1 px-2">
                             <span className="text-sm font-semibold text-gray-200">{asset.symbol}</span>
                           </div>
