@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_KEY = 'c9cb1125f0e04947a2dbb1d4fd054b13';
+const API_KEY = 'df2dd95161e44741a7306d2c20f29328';
 const BASE_URL = 'https://api.twelvedata.com';
 
 export interface MarketQuote {
