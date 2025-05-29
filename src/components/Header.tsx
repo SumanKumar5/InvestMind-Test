@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Brain, Menu, X } from 'lucide-react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Header: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -17,8 +14,6 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isActive = (path: string) => location.pathname === path;
-
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -30,48 +25,24 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center space-x-2 shrink-0 group"
-          >
+          <div className="flex items-center space-x-2 shrink-0 group">
             <Brain className="h-8 w-8 text-blue-500 transition-transform duration-300 group-hover:scale-110" />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
               InvestMinD
             </span>
-          </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <ul className="flex items-center space-x-2 mr-6">
-              <li>
-                <Link 
-                  to="/" 
-                  className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-                    isActive('/') 
-                      ? 'text-white bg-gray-800' 
-                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-                  }`}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/portfolio" 
-                  className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-                    isActive('/portfolio') 
-                      ? 'text-white bg-gray-800' 
-                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-                  }`}
-                >
-                  Portfolio
-                </Link>
-              </li>
-            </ul>
-            <button
-              onClick={() => navigate('/auth')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95"
-            >
+            <div className="flex items-center space-x-2">
+              <button className="px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50">
+                Home
+              </button>
+              <button className="px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50">
+                Portfolio
+              </button>
+            </div>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95">
               Sign In
             </button>
           </div>
@@ -99,41 +70,15 @@ const Header: React.FC = () => {
           }`}
         >
           <div className="py-4 space-y-4">
-            <ul className="space-y-2">
-              <li>
-                <Link 
-                  to="/" 
-                  className={`block px-4 py-2 rounded-lg transition-all duration-300 ${
-                    isActive('/') 
-                      ? 'text-white bg-gray-800' 
-                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/portfolio" 
-                  className={`block px-4 py-2 rounded-lg transition-all duration-300 ${
-                    isActive('/portfolio') 
-                      ? 'text-white bg-gray-800' 
-                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Portfolio
-                </Link>
-              </li>
-            </ul>
-            <button
-              onClick={() => {
-                navigate('/auth');
-                setIsMobileMenuOpen(false);
-              }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95"
-            >
+            <div className="space-y-2">
+              <button className="block w-full px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50">
+                Home
+              </button>
+              <button className="block w-full px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50">
+                Portfolio
+              </button>
+            </div>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95">
               Sign In
             </button>
           </div>

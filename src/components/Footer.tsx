@@ -1,6 +1,5 @@
 import React from 'react';
 import { Github, Twitter, Linkedin, Brain } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
@@ -31,22 +30,8 @@ const Footer: React.FC = () => {
           <nav className="mb-8">
             <ul className="flex flex-wrap justify-center gap-6">
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Documentation</a></li>
-              <li>
-                <Link 
-                  to="/privacy-policy" 
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/terms-of-service" 
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Terms of Service
-                </Link>
-              </li>
+              <li><button className="text-gray-400 hover:text-white transition-colors">Privacy Policy</button></li>
+              <li><button className="text-gray-400 hover:text-white transition-colors">Terms of Service</button></li>
             </ul>
           </nav>
           
