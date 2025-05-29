@@ -68,7 +68,7 @@ const Header: React.FC = () => {
           <X className="h-5 w-5" />
         </button>
       </div>
-    ), { duration: 3000 });
+    ), { duration: 1000 });
   };
 
   return (
@@ -82,7 +82,7 @@ const Header: React.FC = () => {
       <Toaster 
         position="top-right"
         toastOptions={{
-          duration: 3000,
+          duration: 1000,
           className: 'bg-transparent border-0 shadow-none p-0 m-0'
         }}
       />

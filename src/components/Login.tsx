@@ -51,7 +51,7 @@ const Login: React.FC = () => {
             <X className="h-5 w-5" />
           </button>
         </div>
-      ), { duration: 3000 });
+      ), { duration: 1000 });
 
       // Short delay to show the success message
       setTimeout(() => {
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
       <Toaster 
         position="top-right"
         toastOptions={{
-          duration: 3000,
+          duration: 1000,
           className: 'bg-transparent border-0 shadow-none p-0 m-0'
         }}
       />
@@ -215,26 +215,6 @@ const Login: React.FC = () => {
               }`}
             >
               {isLoading ? 'Logging in...' : 'Log In'}
-            </button>
-
-            <div className="relative my-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-700"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-gray-900 text-gray-400">Or continue with</span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              disabled={isLoading}
-              className={`w-full bg-gray-800 hover:bg-gray-750 text-white font-medium py-3 rounded-lg border border-gray-700 transition-all duration-300 flex items-center justify-center space-x-2 ${
-                isLoading ? 'opacity-75 cursor-not-allowed' : ''
-              }`}
-            >
-              <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
-              <span>Continue with Google</span>
             </button>
 
             <p className="text-center text-gray-400 mt-8">
