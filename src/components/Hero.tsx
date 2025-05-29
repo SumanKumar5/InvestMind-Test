@@ -13,7 +13,12 @@ const Hero: React.FC = () => {
   };
 
   const handleStartTracking = () => {
-    navigate('/login');
+    const token = localStorage.getItem('investmind_token');
+    if (token) {
+      navigate('/portfolio');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
