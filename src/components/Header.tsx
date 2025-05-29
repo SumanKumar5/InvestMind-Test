@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Brain, Menu, X, CheckCircle2 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -20,6 +21,19 @@ const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogoClick = () => {
+    if (location.pathname === '/') {
+      // If on home page, smooth scroll to top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    } else {
+      // If on different page, navigate to home
+      navigate('/');
+    }
+  };
 
   const handleAuthAction = () => {
     if (isLoggedIn) {
@@ -74,7 +88,7 @@ const Header: React.FC = () => {
           {/* Logo */}
           <div 
             className="flex items-center space-x-2 shrink-0 group cursor-pointer"
-            onClick={() => navigate('/')}
+            onClick={handleLogoClick}
           >
             <Brain className="h-8 w-8 text-blue-500 transition-transform duration-300 group-hover:scale-110" />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
