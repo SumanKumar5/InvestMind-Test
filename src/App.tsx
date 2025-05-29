@@ -1,9 +1,9 @@
 import React from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import AssetTable from './components/AssetTable';
 import Features from './components/Features';
 import Testimonials from './components/Testimonials';
+import CTA from './components/CTA';
 import Footer from './components/Footer';
 
 function App() {
@@ -12,9 +12,9 @@ function App() {
       <Header />
       <main className="flex-grow">
         <Hero />
-        <AssetTable />
         <Features />
         <Testimonials />
+        <CTA />
       </main>
       <Footer />
     </div>
