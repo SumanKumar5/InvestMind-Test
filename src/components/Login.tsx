@@ -42,10 +42,10 @@ const Login: React.FC = () => {
       {/* Back to Home Button - Fixed Position */}
       <button
         onClick={() => navigate('/')}
-        className="fixed top-6 left-6 z-50 flex items-center space-x-2 px-4 py-2 text-gray-300 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 rounded-lg backdrop-blur-sm transition-all duration-300 group"
+        className="fixed top-6 right-6 z-50 flex items-center space-x-2 px-4 py-2 text-gray-300 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 rounded-lg backdrop-blur-sm transition-all duration-300 group"
       >
-        <ArrowLeft className="h-5 w-5 transform group-hover:-translate-x-1 transition-transform duration-300" />
         <span>Back to Home</span>
+        <ArrowLeft className="h-5 w-5 rotate-180 transform group-hover:translate-x-1 transition-transform duration-300" />
       </button>
 
       {/* Left Panel - Branding */}
