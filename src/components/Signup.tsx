@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Brain, X } from 'lucide-react';
-import { signup } from '../services/api';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -17,14 +14,6 @@ const Signup: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    // Check if user is already logged in
-    const token = localStorage.getItem('investmind_token');
-    if (token) {
-      navigate('/dashboard');
-    }
-  }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -59,13 +48,16 @@ const Signup: React.FC = () => {
     setError('');
 
     try {
-      const { token } = await signup(formData.fullName, formData.email, formData.password);
-      localStorage.setItem('investmind_token', token);
-      toast.success('Account created successfully!');
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // For demo purposes, accept any valid form submission
+      // In a real app, you would send the data to your backend
+      
+      // Redirect to dashboard after successful signup
       navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.message);
-      toast.error(err.message);
+    } catch (err) {
+      setError('An error occurred during signup. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -73,8 +65,6 @@ const Signup: React.FC = () => {
 
   return (
     <div className="min-h-screen flex">
-      <ToastContainer position="top-right" theme="dark" />
-      
       {/* Close Button - Fixed Position */}
       <button
         onClick={() => navigate('/')}
