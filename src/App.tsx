@@ -18,7 +18,6 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/portfolio" element={<Portfolio />} />
           <Route
             path="/"
             element={
