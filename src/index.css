@@ -97,3 +97,39 @@ html {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* Testimonial Swiper Styles */
+.testimonial-swiper {
+  padding: 50px 0;
+  width: 100%;
+}
+
+.testimonial-swiper .swiper-slide {
+  width: auto;
+  max-width: 100%;
+  opacity: 0.4;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+}
+
+.testimonial-swiper .swiper-slide-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.testimonial-swiper .swiper-pagination {
+  position: relative;
+  margin-top: 30px;
+}
+
+.testimonial-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 1;
+}
+
+.testimonial-swiper .swiper-pagination-bullet-active {
+  background: #3B82F6;
+  transform: scale(1.2);
+}
