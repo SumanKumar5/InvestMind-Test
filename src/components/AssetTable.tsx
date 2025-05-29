@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronDown, ChevronUp, SlidersHorizontal, Apple, Microsoft, Bitcoin, Google, Ethereum, LineChart, Banknote, Car, Sun } from 'lucide-react';
+import { ChevronDown, ChevronUp, SlidersHorizontal, Apple, Microscope as Microsoft, Bitcoin, ToggleLeft as Google, Feather as Ethereum, LineChart, Banknote, Car, Sun } from 'lucide-react';
 import { formatCurrency, formatLargeNumber, formatPercentage } from '../utils/formatters';
 import { mockAssets } from '../data/mockAssets';
 import { Asset } from '../types/asset';
