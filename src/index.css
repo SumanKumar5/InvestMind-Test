@@ -11,6 +11,15 @@ body {
   @apply bg-gray-900 text-gray-100;
 }
 
+/* Toast Styles */
+.toast-success {
+  @apply bg-gray-800/95 backdrop-blur-sm text-white border border-green-500/20 shadow-lg shadow-green-500/10 !important;
+}
+
+.toast-error {
+  @apply bg-gray-800/95 backdrop-blur-sm text-white border border-red-500/20 shadow-lg shadow-red-500/10 !important;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
