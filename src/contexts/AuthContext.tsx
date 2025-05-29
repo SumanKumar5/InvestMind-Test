@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     localStorage.removeItem('investmind_token');
     setUser(null);
-    navigate('/login');
+    navigate('/');
   };
 
   return (
