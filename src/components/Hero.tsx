@@ -37,7 +37,7 @@ const Hero: React.FC = () => {
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
             <button className="btn-primary bg-blue-600 text-white font-medium px-8 py-4 rounded-xl shadow-lg shadow-blue-500/25 flex items-center justify-center text-lg">
               <LineChart className="h-5 w-5 mr-2" />
-              Start Investing
+              Start Tracking
             </button>
             <button 
               onClick={scrollToFeatures}
