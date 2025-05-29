@@ -40,30 +40,36 @@ const Header: React.FC = () => {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-6">
-            {/* Desktop Navigation */}
-            <Link 
-              to="/" 
-              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-                isActive('/') 
-                  ? 'text-white bg-gray-800' 
-                  : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-              }`}
-            >
-              Home
-            </Link>
-            <Link 
-              to="/portfolio" 
-              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-                isActive('/portfolio') 
-                  ? 'text-white bg-gray-800' 
-                  : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-              }`}
-            >
-              Portfolio
-            </Link>
+          {/* Desktop Navigation */}
+          <ul className="hidden md:flex items-center space-x-8">
+            <li>
+              <Link 
+                to="/" 
+                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive('/') 
+                    ? 'text-white bg-gray-800' 
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                }`}
+              >
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link 
+                to="/portfolio" 
+                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive('/portfolio') 
+                    ? 'text-white bg-gray-800' 
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                }`}
+              >
+                Portfolio
+              </Link>
+            </li>
+          </ul>
 
-            {/* Desktop Auth Button */}
+          {/* Desktop Auth Button */}
+          <div className="hidden md:block">
             <button
               onClick={() => navigate('/auth')}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95"
