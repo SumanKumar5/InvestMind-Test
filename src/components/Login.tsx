@@ -1,22 +1,40 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Brain } from 'lucide-react';
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add your login logic here
+    
     if (!email || !password) {
       setError('Please fill in all fields');
       return;
     }
-    // Reset error if validation passes
+
+    setIsLoading(true);
     setError('');
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // For demo purposes, accept any email/password combination
+      // In a real app, you would validate credentials with your backend
+      
+      // Redirect to dashboard after successful login
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Invalid email or password');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -91,6 +109,7 @@ const Login: React.FC = () => {
                   className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="Enter your email"
                   required
+                  disabled={isLoading}
                 />
               </div>
 
@@ -107,11 +126,13 @@ const Login: React.FC = () => {
                     className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-10"
                     placeholder="Enter your password"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                    disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -121,9 +142,12 @@ const Login: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-gray-900"
+              disabled={isLoading}
+              className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-gray-900 ${
+                isLoading ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
             >
-              Log In
+              {isLoading ? 'Logging in...' : 'Log In'}
             </button>
 
             <div className="relative my-8">
@@ -137,7 +161,10 @@ const Login: React.FC = () => {
 
             <button
               type="button"
-              className="w-full bg-gray-800 hover:bg-gray-750 text-white font-medium py-3 rounded-lg border border-gray-700 transition-all duration-300 flex items-center justify-center space-x-2"
+              disabled={isLoading}
+              className={`w-full bg-gray-800 hover:bg-gray-750 text-white font-medium py-3 rounded-lg border border-gray-700 transition-all duration-300 flex items-center justify-center space-x-2 ${
+                isLoading ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
             >
               <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
               <span>Continue with Google</span>

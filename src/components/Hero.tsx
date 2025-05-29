@@ -1,12 +1,19 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { LineChart, Brain } from 'lucide-react';
 
 const Hero: React.FC = () => {
+  const navigate = useNavigate();
+
   const scrollToFeatures = () => {
     const featuresSection = document.getElementById('features');
     if (featuresSection) {
       featuresSection.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleStartTracking = () => {
+    navigate('/login');
   };
 
   return (
@@ -35,7 +42,10 @@ const Hero: React.FC = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
-            <button className="btn-primary bg-blue-600 text-white font-medium px-8 py-4 rounded-xl shadow-lg shadow-blue-500/25 flex items-center justify-center text-lg">
+            <button 
+              onClick={handleStartTracking}
+              className="btn-primary bg-blue-600 text-white font-medium px-8 py-4 rounded-xl shadow-lg shadow-blue-500/25 flex items-center justify-center text-lg"
+            >
               <LineChart className="h-5 w-5 mr-2" />
               Start Tracking
             </button>
