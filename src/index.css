@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
-  --primary: #5E17EB;
-  --primary-dark: #4912c7;
+  color-scheme: light;
+  --primary: #1a1a1a;
+  --primary-dark: #000000;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  @apply bg-black text-white;
+  @apply bg-white text-gray-900;
 }
 
 /* Smooth scrolling */
@@ -21,7 +21,7 @@ html {
 @layer components {
   /* Custom cursor */
   .custom-cursor {
-    @apply fixed w-8 h-8 rounded-full pointer-events-none z-50 mix-blend-difference bg-white transform -translate-x-1/2 -translate-y-1/2;
+    @apply fixed w-8 h-8 rounded-full pointer-events-none z-50 mix-blend-difference bg-black transform -translate-x-1/2 -translate-y-1/2;
     transition: transform 0.2s ease-out;
   }
 
@@ -49,18 +49,18 @@ html {
   /* Card hover effects */
   .hover-card {
     @apply transition-all duration-500;
-    background: linear-gradient(to bottom right, rgba(94, 23, 235, 0.1), rgba(0, 0, 0, 0));
+    background: linear-gradient(to bottom right, rgba(26, 26, 26, 0.1), rgba(255, 255, 255, 0));
   }
 
   .hover-card:hover {
-    background: linear-gradient(to bottom right, rgba(94, 23, 235, 0.2), rgba(0, 0, 0, 0));
+    background: linear-gradient(to bottom right, rgba(26, 26, 26, 0.2), rgba(255, 255, 255, 0));
     transform: translateY(-10px);
   }
 }
 
 /* Gradient animations */
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#5E17EB] to-[#8C52FF];
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#1a1a1a] to-[#4a4a4a];
   animation: gradient 8s ease infinite;
 }
 
@@ -76,13 +76,13 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-black;
+  @apply bg-gray-100;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-[#5E17EB] rounded-full;
+  @apply bg-gray-300 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-[#4912c7];
+  @apply bg-gray-400;
 }
