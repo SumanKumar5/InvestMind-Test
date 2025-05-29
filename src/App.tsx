@@ -8,7 +8,6 @@ import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import Dashboard from './components/Dashboard';
 
 function App() {
   return (
@@ -16,7 +15,6 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={
           <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
             <Header />
