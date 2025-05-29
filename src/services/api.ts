@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const COINGECKO_API = 'https://api.coingecko.com/api/v3';
 const ALPHA_VANTAGE_API = 'https://www.alphavantage.co/query';
-const ALPHA_VANTAGE_KEY = 'demo'; // Replace with your API key
+const ALPHA_VANTAGE_KEY = 'SI3CN0SOFXH9BU7W';
 
 export interface MarketData {
   id: string;
@@ -56,11 +56,11 @@ export const fetchTopStocks = async (): Promise<MarketData[]> => {
         id: symbol.toLowerCase(),
         rank: index + 1,
         symbol,
-        name: symbol, // Ideally, we'd have a mapping for full names
+        name: getStockName(symbol), // Added company names
         type: 'stock',
         price: parseFloat(quote['05. price']),
         priceChange24h: parseFloat(quote['10. change percent'].replace('%', '')),
-        marketCap: 0, // Not available in the demo API
+        marketCap: 0, // Alpha Vantage basic API doesn't provide market cap
         volume: parseFloat(quote['06. volume'])
       };
     })
@@ -68,6 +68,18 @@ export const fetchTopStocks = async (): Promise<MarketData[]> => {
 
   return stocksData;
 };
+
+// Helper function to get company names
+function getStockName(symbol: string): string {
+  const companies: Record<string, string> = {
+    'AAPL': 'Apple Inc.',
+    'MSFT': 'Microsoft Corporation',
+    'GOOGL': 'Alphabet Inc.',
+    'AMZN': 'Amazon.com Inc.',
+    'NVDA': 'NVIDIA Corporation'
+  };
+  return companies[symbol] || symbol;
+}
 
 export const fetchAllMarketData = async (): Promise<MarketData[]> => {
   try {
