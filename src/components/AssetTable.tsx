@@ -46,18 +46,18 @@ const AssetTable: React.FC = () => {
   const filteredAssets = useMemo(() => {
     return assets
       .filter((asset) => {
-        const matchesSearch = asset.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            asset.symbol.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = (asset.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || 
+                            (asset.symbol?.toLowerCase() || '').includes(searchQuery.toLowerCase());
         return matchesSearch;
       })
       .sort((a, b) => {
         if (sortField === 'name' || sortField === 'symbol') {
           return sortDirection === 'asc' 
-            ? a[sortField].localeCompare(b[sortField]) 
-            : b[sortField].localeCompare(a[sortField]);
+            ? (a[sortField] || '').localeCompare(b[sortField] || '') 
+            : (b[sortField] || '').localeCompare(a[sortField] || '');
         } else {
-          const aValue = a[sortField];
-          const bValue = b[sortField];
+          const aValue = a[sortField] || 0;
+          const bValue = b[sortField] || 0;
           return sortDirection === 'asc' ? (aValue - bValue) : (bValue - aValue);
         }
       });
