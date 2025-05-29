@@ -6,7 +6,6 @@ import AssetTable from './components/AssetTable';
 import Features from './components/Features';
 import Footer from './components/Footer';
 import Auth from './components/Auth';
-import Portfolio from './components/Portfolio';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 
