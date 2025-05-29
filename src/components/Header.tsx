@@ -1,23 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Brain, Menu, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem('investmind_token');
+      setIsLoggedIn(!!token);
+    };
+
     window.addEventListener('scroll', handleScroll);
+    checkAuthStatus();
+    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleSignIn = () => {
-    navigate('/login');
+  const handleAuthAction = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem('investmind_token');
+      setIsLoggedIn(false);
+      toast.success('Signed out successfully');
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -50,18 +66,24 @@ const Header: React.FC = () => {
               >
                 Home
               </button>
-              <button 
-                onClick={() => navigate('/portfolio')}
-                className="px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50"
-              >
-                Portfolio
-              </button>
+              {isLoggedIn && (
+                <button 
+                  onClick={() => navigate('/portfolio')}
+                  className="px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50"
+                >
+                  Portfolio
+                </button>
+              )}
             </div>
             <button 
-              onClick={handleSignIn}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95"
+              onClick={handleAuthAction}
+              className={`${
+                isLoggedIn 
+                  ? 'bg-gray-700 hover:bg-gray-600' 
+                  : 'bg-blue-600 hover:bg-blue-700'
+              } text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95`}
             >
-              Sign In
+              {isLoggedIn ? 'Sign Out' : 'Sign In'}
             </button>
           </div>
 
@@ -98,24 +120,30 @@ const Header: React.FC = () => {
               >
                 Home
               </button>
-              <button 
-                onClick={() => {
-                  navigate('/portfolio');
-                  setIsMobileMenuOpen(false);
-                }}
-                className="block w-full px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50"
-              >
-                Portfolio
-              </button>
+              {isLoggedIn && (
+                <button 
+                  onClick={() => {
+                    navigate('/portfolio');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="block w-full px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50"
+                >
+                  Portfolio
+                </button>
+              )}
             </div>
             <button 
               onClick={() => {
-                handleSignIn();
+                handleAuthAction();
                 setIsMobileMenuOpen(false);
               }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95"
+              className={`w-full ${
+                isLoggedIn 
+                  ? 'bg-gray-700 hover:bg-gray-600' 
+                  : 'bg-blue-600 hover:bg-blue-700'
+              } text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95`}
             >
-              Sign In
+              {isLoggedIn ? 'Sign Out' : 'Sign In'}
             </button>
           </div>
         </div>
