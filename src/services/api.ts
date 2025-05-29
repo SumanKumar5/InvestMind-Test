@@ -28,4 +28,20 @@ export const signup = async (name: string, email: string, password: string) => {
   return response.data;
 };
 
+// Portfolio API endpoints
+export const getPortfolios = async () => {
+  const response = await api.get('/api/portfolios');
+  return response.data;
+};
+
+export const createPortfolio = async (name: string) => {
+  const response = await api.post('/api/portfolios', { name });
+  return response.data;
+};
+
+export const deletePortfolio = async (id: string) => {
+  const response = await api.delete(`/api/portfolios/${id}`);
+  return response.data;
+};
+
 export default api;
