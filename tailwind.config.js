@@ -4,11 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        'gray-750': '#293548',
+        primary: '#5E17EB',
+        'primary-dark': '#4912c7',
+        'custom-black': '#0A0A0A',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
+        'reveal': 'reveal 1s cubic-bezier(0.77, 0, 0.175, 1) forwards',
       },
       keyframes: {
         fadeIn: {
