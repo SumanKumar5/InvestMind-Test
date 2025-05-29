@@ -124,7 +124,7 @@ const Header: React.FC = () => {
             
             <div className="flex items-center space-x-4">
               {user ? (
-                <div className="relative" ref={profileDropdownRef}>
+                <div className="relative\" ref={profileDropdownRef}>
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors duration-300"
