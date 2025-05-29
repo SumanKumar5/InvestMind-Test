@@ -23,11 +23,11 @@ export const getTopStocks = async (): Promise<StockQuote[]> => {
       const quotes = Array.isArray(response.data) ? response.data : [response.data];
       
       return quotes.map((quote: any) => ({
-        symbol: quote.symbol,
-        name: quote.name || quote.symbol,
-        price: parseFloat(quote.close),
-        change: parseFloat(quote.percent_change),
-        volume: parseInt(quote.volume),
+        symbol: String(quote.symbol || ''),
+        name: String(quote.name || quote.symbol || ''),
+        price: parseFloat(quote.close) || 0,
+        change: parseFloat(quote.percent_change) || 0,
+        volume: parseInt(quote.volume) || 0,
       }));
     }
     
