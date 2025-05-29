@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Brain, Menu, X, CheckCircle2 } from 'lucide-react';
+import { Brain, Menu, X, CheckCircle2, User } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useAuth } from '../contexts/AuthContext';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // Initialize with the current auth state
-    return !!localStorage.getItem('investmind_token');
-  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,21 +22,18 @@ const Header: React.FC = () => {
 
   const handleLogoClick = () => {
     if (location.pathname === '/') {
-      // If on home page, smooth scroll to top
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
     } else {
-      // If on different page, navigate to home
       navigate('/');
     }
   };
 
   const handleAuthAction = () => {
-    if (isLoggedIn) {
-      localStorage.removeItem('investmind_token');
-      setIsLoggedIn(false);
+    if (user) {
+      logout();
       toast.custom((t) => (
         <div
           className={`${
@@ -61,7 +56,6 @@ const Header: React.FC = () => {
           </button>
         </div>
       ), { duration: 3000 });
-      navigate('/');
     } else {
       navigate('/login');
     }
@@ -98,14 +92,14 @@ const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
               <button 
                 onClick={() => navigate('/')}
                 className="px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50"
               >
                 Home
               </button>
-              {isLoggedIn && (
+              {user && (
                 <button 
                   onClick={() => navigate('/portfolio')}
                   className="px-4 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-white hover:bg-gray-800/50"
@@ -114,16 +108,25 @@ const Header: React.FC = () => {
                 </button>
               )}
             </div>
-            <button 
-              onClick={handleAuthAction}
-              className={`${
-                isLoggedIn 
-                  ? 'bg-gray-700 hover:bg-gray-600' 
-                  : 'bg-blue-600 hover:bg-blue-700'
-              } text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95`}
-            >
-              {isLoggedIn ? 'Sign Out' : 'Sign In'}
-            </button>
+            
+            <div className="flex items-center space-x-4">
+              {user && (
+                <div className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-800/50">
+                  <User className="h-5 w-5 text-gray-400" />
+                  <span className="text-gray-200">Hi, {user.name.split(' ')[0]} 👋</span>
+                </div>
+              )}
+              <button 
+                onClick={handleAuthAction}
+                className={`${
+                  user 
+                    ? 'bg-gray-700 hover:bg-gray-600' 
+                    : 'bg-blue-600 hover:bg-blue-700'
+                } text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95`}
+              >
+                {user ? 'Sign Out' : 'Sign In'}
+              </button>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -149,6 +152,12 @@ const Header: React.FC = () => {
           }`}
         >
           <div className="py-4 space-y-4">
+            {user && (
+              <div className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-800/50">
+                <User className="h-5 w-5 text-gray-400" />
+                <span className="text-gray-200">Hi, {user.name.split(' ')[0]} 👋</span>
+              </div>
+            )}
             <div className="space-y-2">
               <button 
                 onClick={() => {
@@ -159,7 +168,7 @@ const Header: React.FC = () => {
               >
                 Home
               </button>
-              {isLoggedIn && (
+              {user && (
                 <button 
                   onClick={() => {
                     navigate('/portfolio');
@@ -177,12 +186,12 @@ const Header: React.FC = () => {
                 setIsMobileMenuOpen(false);
               }}
               className={`w-full ${
-                isLoggedIn 
+                user 
                   ? 'bg-gray-700 hover:bg-gray-600' 
                   : 'bg-blue-600 hover:bg-blue-700'
               } text-white px-6 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 active:scale-95`}
             >
-              {isLoggedIn ? 'Sign Out' : 'Sign In'}
+              {user ? 'Sign Out' : 'Sign In'}
             </button>
           </div>
         </div>

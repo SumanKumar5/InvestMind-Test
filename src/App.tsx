@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import AssetTable from './components/AssetTable';
@@ -13,25 +14,25 @@ import Portfolio from './components/Portfolio';
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/" element={
-          <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
-            <Header />
-            <main className="flex-grow">
-              <Hero />
-              <AssetTable />
-              <Features />
-              <Testimonials />
-            </main>
-            <Footer />
-          </div>
-        } />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/" element={
+            <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
+              <Header />
+              <main className="flex-grow">
+                <Hero />
+                <AssetTable />
+                <Features />
+                <Testimonials />
+              </main>
+              <Footer />
+            </div>
+          } />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 }
-
-export default App;
