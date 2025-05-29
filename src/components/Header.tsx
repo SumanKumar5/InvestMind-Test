@@ -29,29 +29,35 @@ const Header: React.FC = () => {
     if (isLoggedIn) {
       localStorage.removeItem('investmind_token');
       setIsLoggedIn(false);
-      toast.custom((t) => (
-        <div
-          className={`${
-            t.visible ? 'animate-enter' : 'animate-leave'
-          } toast-success max-w-md w-full bg-gray-800/95 shadow-lg rounded-lg pointer-events-auto flex items-center p-4`}
-        >
-          <div className="flex-shrink-0 text-green-400">
-            <CheckCircle2 className="h-6 w-6" />
-          </div>
-          <div className="ml-3 flex-1">
-            <p className="text-sm font-medium text-gray-100">
-              Successfully signed out!
-            </p>
-          </div>
-          <button
-            onClick={() => toast.dismiss(t.id)}
-            className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-300"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-      ), { duration: 3000 });
+      
+      // First navigate
       navigate('/');
+      
+      // Then show the notification after a small delay to ensure we're on the home page
+      setTimeout(() => {
+        toast.custom((t) => (
+          <div
+            className={`${
+              t.visible ? 'animate-enter' : 'animate-leave'
+            } toast-success max-w-md w-full bg-gray-800/95 shadow-lg rounded-lg pointer-events-auto flex items-center p-4`}
+          >
+            <div className="flex-shrink-0 text-green-400">
+              <CheckCircle2 className="h-6 w-6" />
+            </div>
+            <div className="ml-3 flex-1">
+              <p className="text-sm font-medium text-gray-100">
+                Successfully signed out!
+              </p>
+            </div>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-300"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        ), { duration: 3000 });
+      }, 100);
     } else {
       navigate('/login');
     }
