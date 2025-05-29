@@ -3,14 +3,12 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
-  --primary: #1a1a1a;
-  --primary-dark: #000000;
+  color-scheme: dark;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  @apply bg-white text-gray-900;
+  @apply bg-gray-900 text-gray-100;
 }
 
 /* Smooth scrolling */
@@ -18,49 +16,79 @@ html {
   scroll-behavior: smooth;
 }
 
-@layer components {
-  /* Custom cursor */
-  .custom-cursor {
-    @apply fixed w-8 h-8 rounded-full pointer-events-none z-50 mix-blend-difference bg-black transform -translate-x-1/2 -translate-y-1/2;
-    transition: transform 0.2s ease-out;
-  }
+/* Enhanced button animations */
+.btn-primary {
+  @apply relative overflow-hidden transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-gray-900;
+}
 
-  /* Button styles */
-  .btn-primary {
-    @apply relative overflow-hidden transition-all duration-500 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none;
-    background: var(--primary);
-  }
+.btn-primary::after {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/30 to-blue-600/0 transform translate-x-[-100%] transition-transform duration-1000;
+}
 
-  .btn-primary:hover {
-    background: var(--primary-dark);
-  }
+.btn-primary:hover::after {
+  @apply translate-x-[100%];
+}
 
-  /* Magnetic effect */
-  .magnetic {
-    @apply transition-transform duration-500;
-  }
+/* Card hover effects */
+.feature-card {
+  @apply transition-all duration-300 hover:transform hover:-translate-y-1;
+}
 
-  /* Text reveal animation */
-  .reveal-text {
-    @apply opacity-0 translate-y-8 animate-reveal;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-  }
+/* Table responsiveness */
+.responsive-table {
+  @apply w-full overflow-x-auto;
+}
 
-  /* Card hover effects */
-  .hover-card {
-    @apply transition-all duration-500;
-    background: linear-gradient(to bottom right, rgba(26, 26, 26, 0.1), rgba(255, 255, 255, 0));
+@media (max-width: 768px) {
+  .asset-card {
+    @apply bg-gray-800 rounded-lg p-4 mb-4 border border-gray-700;
   }
-
-  .hover-card:hover {
-    background: linear-gradient(to bottom right, rgba(26, 26, 26, 0.2), rgba(255, 255, 255, 0));
-    transform: translateY(-10px);
+  
+  .asset-card-header {
+    @apply flex justify-between items-center mb-2;
+  }
+  
+  .asset-card-body {
+    @apply space-y-2;
+  }
+  
+  .asset-stat {
+    @apply flex justify-between items-center;
   }
 }
 
-/* Gradient animations */
-.gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#1a1a1a] to-[#4a4a4a];
+/* Subtle track for scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
+}
+
+/* Add a custom color not in Tailwind by default */
+.bg-gray-750 {
+  background-color: #293548;
+}
+
+/* Enhanced table animations */
+.table-row-hover {
+  @apply transition-colors duration-200;
+}
+
+/* Gradient text animation */
+.animate-gradient {
+  background-size: 200% 200%;
   animation: gradient 8s ease infinite;
 }
 
@@ -68,21 +96,4 @@ html {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-gray-100;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-full;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400;
 }
