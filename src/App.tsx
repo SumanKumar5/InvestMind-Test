@@ -7,12 +7,14 @@ import Features from './components/Features';
 import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import Login from './components/Login';
+import Signup from './components/Signup';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/" element={
           <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
             <Header />
