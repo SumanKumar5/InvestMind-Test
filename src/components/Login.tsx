@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Brain, X } from 'lucide-react';
+import { login } from '../services/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -9,6 +12,14 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // Check if user is already logged in
+    const token = localStorage.getItem('investmind_token');
+    if (token) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,16 +33,13 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any email/password combination
-      // In a real app, you would validate credentials with your backend
-      
-      // Redirect to dashboard after successful login
+      const { token } = await login(email, password);
+      localStorage.setItem('investmind_token', token);
+      toast.success('Login successful!');
       navigate('/dashboard');
-    } catch (err) {
-      setError('Invalid email or password');
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -39,6 +47,8 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex">
+      <ToastContainer position="top-right" theme="dark" />
+      
       {/* Close Button - Fixed Position */}
       <button
         onClick={() => navigate('/')}
