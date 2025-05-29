@@ -22,21 +22,21 @@ export const getMarketData = async (symbols: string[]): Promise<MarketQuote[]> =
 
     if (Array.isArray(response.data)) {
       return response.data.map((quote: any) => ({
-        symbol: quote.symbol,
-        name: quote.name || quote.symbol,
-        price: parseFloat(quote.close),
-        percent_change: parseFloat(quote.percent_change),
-        volume: parseFloat(quote.volume)
+        symbol: String(quote.symbol || ''),
+        name: String(quote.name || quote.symbol || ''),
+        price: parseFloat(quote.close) || 0,
+        percent_change: parseFloat(quote.percent_change) || 0,
+        volume: parseFloat(quote.volume) || 0
       }));
     } else {
       // Single quote response
       const quote = response.data;
       return [{
-        symbol: quote.symbol,
-        name: quote.name || quote.symbol,
-        price: parseFloat(quote.close),
-        percent_change: parseFloat(quote.percent_change),
-        volume: parseFloat(quote.volume)
+        symbol: String(quote.symbol || ''),
+        name: String(quote.name || quote.symbol || ''),
+        price: parseFloat(quote.close) || 0,
+        percent_change: parseFloat(quote.percent_change) || 0,
+        volume: parseFloat(quote.volume) || 0
       }];
     }
   } catch (error) {
