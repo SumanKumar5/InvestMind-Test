@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, Menu, X } from 'lucide-react';
+import { Brain, Menu, X, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Header: React.FC = () => {
@@ -36,9 +36,7 @@ const Header: React.FC = () => {
           } toast-success max-w-md w-full bg-gray-800/95 shadow-lg rounded-lg pointer-events-auto flex items-center p-4`}
         >
           <div className="flex-shrink-0 text-green-400">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
+            <CheckCircle2 className="h-6 w-6" />
           </div>
           <div className="ml-3 flex-1">
             <p className="text-sm font-medium text-gray-100">
