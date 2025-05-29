@@ -1,30 +1,26 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  safelist: ['animate-reveal'],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      colors: {
+        'gray-750': '#293548',
+      },
       animation: {
-        'reveal': 'reveal 1s ease-in-out forwards',
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'slide-up': 'slideUp 0.5s ease-out',
       },
       keyframes: {
-        reveal: {
-          'from': {
-            clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)',
-            opacity: '0',
-            transform: 'translateY(100px)',
-          },
-          'to': {
-            clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)',
-            opacity: '1',
-            transform: 'translateY(0)',
-          },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
         },
       },
     },
   },
   plugins: [],
-}
+};
