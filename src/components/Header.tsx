@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Brain, Menu, X, CheckCircle2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -65,6 +65,14 @@ const Header: React.FC = () => {
           : 'bg-transparent'
       }`}
     >
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          className: 'bg-transparent border-0 shadow-none p-0 m-0'
+        }}
+      />
+      
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
