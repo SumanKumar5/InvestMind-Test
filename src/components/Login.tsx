@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Brain, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Brain, X } from 'lucide-react';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -39,13 +39,13 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex">
-      {/* Back to Home Button - Fixed Position */}
+      {/* Close Button - Fixed Position */}
       <button
         onClick={() => navigate('/')}
-        className="fixed top-6 right-6 z-50 flex items-center space-x-2 px-4 py-2 text-gray-300 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 rounded-lg backdrop-blur-sm transition-all duration-300 group"
+        className="fixed top-6 right-6 z-50 p-2 text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-110"
+        aria-label="Close"
       >
-        <span>Back to Home</span>
-        <ArrowLeft className="h-5 w-5 rotate-180 transform group-hover:translate-x-1 transition-transform duration-300" />
+        <X className="h-6 w-6" />
       </button>
 
       {/* Left Panel - Branding */}
