@@ -229,7 +229,7 @@ const Portfolio: React.FC = () => {
                             : <TrendingDown className="w-4 h-4 mr-1" />
                           }
                           P/L: {portfolio.analytics.profitLossPercentage >= 0 ? '+' : ''}
-                          {portfolio.analytics.profitLossPercentage.toFixed(2)}%
+                          {parseFloat(portfolio.analytics.profitLossPercentage).toFixed(2)}%
                         </div>
                       </div>
                     )}
