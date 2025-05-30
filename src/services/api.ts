@@ -45,7 +45,7 @@ export const deletePortfolio = async (id: string) => {
 };
 
 export const getPortfolioAnalytics = async (portfolioId: string) => {
-  const response = await api.get(`/api/portfolios/${portfolioId}/analytics`);
+  const response = await api.get(`/api/analytics/${portfolioId}`);
   return response.data;
 };
 
