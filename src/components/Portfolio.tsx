@@ -214,11 +214,11 @@ const Portfolio: React.FC = () => {
                       })}
                     </p>
                     
-                    {portfolio.analytics && (
-                      <div className="space-y-2 mb-4">
-                        <div className="text-gray-300">
-                          Investment: {formatCurrency(portfolio.analytics.totalInvestment)}
-                        </div>
+                    <div className="space-y-2 mb-4">
+                      <div className="text-gray-300">
+                        Investment: {formatCurrency(portfolio.analytics?.totalInvestment || 0)}
+                      </div>
+                      {portfolio.analytics?.profitLossPercentage != null && !isNaN(portfolio.analytics.profitLossPercentage) ? (
                         <div className={`flex items-center ${
                           portfolio.analytics.profitLossPercentage >= 0 
                             ? 'text-green-500' 
@@ -231,8 +231,10 @@ const Portfolio: React.FC = () => {
                           P/L: {portfolio.analytics.profitLossPercentage >= 0 ? '+' : ''}
                           {parseFloat(portfolio.analytics.profitLossPercentage).toFixed(2)}%
                         </div>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="text-gray-400">P/L: --</div>
+                      )}
+                    </div>
                     
                     <div className="flex items-center space-x-3">
                       <button
