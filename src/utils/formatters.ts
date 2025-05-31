@@ -23,6 +23,8 @@ export const formatLargeNumber = (value: number): string => {
   return value.toString();
 };
 
-export const formatPercentage = (value: number): string => {
-  return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
+export const formatPercentage = (value: number | string | null | undefined): string => {
+  const num = parseFloat(String(value));
+  if (isNaN(num)) return "--";
+  return `${num >= 0 ? '+' : ''}${num.toFixed(2)}%`;
 };
