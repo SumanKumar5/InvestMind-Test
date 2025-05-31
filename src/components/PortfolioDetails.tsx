@@ -22,8 +22,6 @@ import {
   addHolding, 
   deleteHolding,
   getPortfolioAnalytics,
-  getPortfolioCAGR,
-  getSectorExposure,
   exportPortfolio
 } from '../services/api';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
@@ -81,15 +79,19 @@ const PortfolioDetails: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const [holdingsData, analyticsData, cagrData, sectorExposure] = await Promise.all([
+      const [holdingsData, analyticsData] = await Promise.all([
         getPortfolioHoldings(id),
-        getPortfolioAnalytics(id),
-        getPortfolioCAGR(id),
-        getSectorExposure(id)
+        getPortfolioAnalytics(id)
       ]);
 
       setHoldings(holdingsData);
-      setAnalytics({ ...analyticsData, cagr: cagrData?.cagr });
+      setAnalytics(analyticsData);
+
+      // Transform sectors data for pie chart
+      const sectorExposure = Object.entries(analyticsData.sectors).map(([sector, percentage]) => ({
+        sector,
+        percentage: parseFloat(percentage)
+      }));
       setSectorData(sectorExposure);
     } catch (err) {
       toast.error('Failed to load portfolio data');
@@ -290,15 +292,15 @@ const PortfolioDetails: React.FC = () => {
                 <div className="flex items-center">
                   {analytics?.profitLossPercentage != null ? (
                     <>
-                      {analytics.profitLossPercentage >= 0 ? (
+                      {parseFloat(analytics.profitLossPercentage) >= 0 ? (
                         <TrendingUp className="w-5 h-5 text-green-500 mr-2" />
                       ) : (
                         <TrendingDown className="w-5 h-5 text-red-500 mr-2" />
                       )}
                       <p className={`text-2xl font-semibold ${
-                        analytics.profitLossPercentage >= 0 ? 'text-green-500' : 'text-red-500'
+                        parseFloat(analytics.profitLossPercentage) >= 0 ? 'text-green-500' : 'text-red-500'
                       }`}>
-                        {formatPercentage(analytics.profitLossPercentage)}
+                        {analytics.profitLossPercentage}%
                       </p>
                     </>
                   ) : (
@@ -314,7 +316,7 @@ const PortfolioDetails: React.FC = () => {
                 <div className="h-8 bg-gray-700 rounded animate-pulse"></div>
               ) : (
                 <p className="text-2xl font-semibold">
-                  {analytics?.cagr != null ? formatPercentage(analytics.cagr) : '--'}
+                  {analytics?.CAGR || '--'}
                 </p>
               )}
             </div>
@@ -443,7 +445,7 @@ const PortfolioDetails: React.FC = () => {
                         cx="50%"
                         cy="50%"
                         outerRadius={80}
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        label={({ name, percent }) => `${name} ${(percent).toFixed(0)}%`}
                       >
                         {sectorData.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -456,7 +458,7 @@ const PortfolioDetails: React.FC = () => {
                               <div className="bg-gray-800 p-3 rounded-lg border border-gray-700">
                                 <p className="text-sm text-gray-200">{payload[0].name}</p>
                                 <p className="text-sm font-semibold text-white">
-                                  {formatPercentage(payload[0].value)}
+                                  {payload[0].value.toFixed(2)}%
                                 </p>
                               </div>
                             );

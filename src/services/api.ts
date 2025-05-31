@@ -70,16 +70,6 @@ export const deleteHolding = async (holdingId: string) => {
   return response.data;
 };
 
-export const getPortfolioCAGR = async (portfolioId: string) => {
-  const response = await api.get(`/api/analytics/${portfolioId}/cagr`);
-  return response.data;
-};
-
-export const getSectorExposure = async (portfolioId: string) => {
-  const response = await api.get(`/api/analytics/${portfolioId}/sector`);
-  return response.data;
-};
-
 export const exportPortfolio = async (portfolioId: string) => {
   const response = await api.get(`/api/exports/${portfolioId}`, {
     responseType: 'blob'
