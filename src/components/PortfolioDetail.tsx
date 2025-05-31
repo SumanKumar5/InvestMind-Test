@@ -74,29 +74,35 @@ const PortfolioDetail: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchData = async () => {
-    try {
-      const [holdingsRes, analyticsRes, cagrRes, sectorRes] = await Promise.all([
-        fetch(`/api/portfolios/${id}/holdings`),
-        fetch(`/api/analytics/${id}`),
-        fetch(`/api/analytics/${id}/cagr`),
-        fetch(`/api/analytics/${id}/sector`)
-      ]);
+const fetchData = async () => {
+  setIsLoading(true);
+  try {
+    const [holdingsRes, analyticsRes, cagrRes, sectorRes] = await Promise.all([
+      fetch(`/api/portfolios/${id}/holdings`),
+      fetch(`/api/analytics/${id}`),
+      fetch(`/api/analytics/${id}/cagr`),
+      fetch(`/api/analytics/${id}/sector`)
+    ]);
 
-      const holdingsData = await holdingsRes.json();
-      const analyticsData = await analyticsRes.json();
-      const { cagr } = await cagrRes.json();
-      const sectorData = await sectorRes.json();
-
-      setHoldings(holdingsData);
-      setAnalytics({ ...analyticsData, cagr });
-      setSectorData(sectorData);
-    } catch (error) {
-      toast.error('Failed to load portfolio data');
-    } finally {
-      setIsLoading(false);
+    if (!holdingsRes.ok || !analyticsRes.ok || !cagrRes.ok || !sectorRes.ok) {
+      throw new Error("One or more requests failed");
     }
-  };
+
+    const holdingsData = await holdingsRes.json();
+    const analyticsData = await analyticsRes.json();
+    const { cagr } = await cagrRes.json();
+    const sectorData = await sectorRes.json();
+
+    setHoldings(holdingsData ?? []);
+    setAnalytics({ ...analyticsData, cagr: cagr ?? 0 });
+    setSectorData(sectorData ?? []);
+  } catch (error) {
+    console.error("❌ Error loading portfolio data:", error);
+    toast.error('Failed to load portfolio data. Please try again.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchData();
