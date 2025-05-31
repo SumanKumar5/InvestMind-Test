@@ -22,8 +22,6 @@ import {
   addHolding, 
   deleteHolding,
   getPortfolioAnalytics,
-  getPortfolioCAGR,
-  getSectorExposure,
   exportPortfolio
 } from '../services/api';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
@@ -81,16 +79,14 @@ const PortfolioDetails: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const [holdingsData, analyticsData, cagrData, sectorExposure] = await Promise.all([
+      const [holdingsData, analyticsData] = await Promise.all([
         getPortfolioHoldings(id),
-        getPortfolioAnalytics(id),
-        getPortfolioCAGR(id),
-        getSectorExposure(id)
+        getPortfolioAnalytics(id)
       ]);
 
       setHoldings(holdingsData);
-      setAnalytics({ ...analyticsData, cagr: cagrData?.cagr });
-      setSectorData(sectorExposure);
+      setAnalytics(analyticsData);
+      setSectorData(analyticsData.sectorExposure || []);
     } catch (err) {
       toast.error('Failed to load portfolio data');
     } finally {
@@ -394,7 +390,7 @@ const PortfolioDetails: React.FC = () => {
                             <td className="px-6 py-4">
                               <div className="flex items-center space-x-2">
                                 <button
-                                  onClick={() => navigate(`/insights/${holding.symbol}`)}
+                                  onClick={() => navigate(`/insights?symbol=${holding.symbol}&quantity=${holding.quantity}&avgBuyPrice=${holding.buyPrice}`)}
                                   className="flex items-center space-x-1 text-sm text-blue-500 hover:text-blue-400 transition-colors px-3 py-2 rounded-lg hover:bg-blue-500/10"
                                 >
                                   <Brain className="w-4 h-4" />
