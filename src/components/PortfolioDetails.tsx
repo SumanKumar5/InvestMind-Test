@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  Trash2, 
-  Brain, 
-  Download, 
   Plus, 
-  X, 
+  Trash2, 
+  ExternalLink, 
   Loader2, 
+  X, 
   CheckCircle2, 
   TrendingUp, 
   TrendingDown,
-  AlertCircle
+  AlertCircle,
+  Brain,
+  Download
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import toast, { Toaster } from 'react-hot-toast';
