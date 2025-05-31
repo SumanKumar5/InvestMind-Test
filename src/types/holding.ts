@@ -20,6 +20,5 @@ export interface PortfolioAnalytics {
   totalInvestment: number;
   currentValue: number;
   profitLossPercentage: number;
-  CAGR: string;
-  sectors: Record<string, string>;
+  cagr?: number;
 }

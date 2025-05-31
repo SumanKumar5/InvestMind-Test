@@ -22,6 +22,8 @@ import {
   addHolding, 
   deleteHolding,
   getPortfolioAnalytics,
+  getPortfolioCAGR,
+  getSectorExposure,
   exportPortfolio
 } from '../services/api';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
@@ -79,41 +81,18 @@ const PortfolioDetails: React.FC = () => {
 
     setIsLoading(true);
     try {
-      console.log('Fetching portfolio data for ID:', id);
-      
-      const [holdingsData, analyticsData] = await Promise.all([
-        getPortfolioHoldings(id).catch(error => {
-          console.error('Error fetching holdings:', error.response?.data || error.message);
-          throw error;
-        }),
-        getPortfolioAnalytics(id).catch(error => {
-          console.error('Error fetching analytics:', error.response?.data || error.message);
-          throw error;
-        })
+      const [holdingsData, analyticsData, cagrData, sectorExposure] = await Promise.all([
+        getPortfolioHoldings(id),
+        getPortfolioAnalytics(id),
+        getPortfolioCAGR(id),
+        getSectorExposure(id)
       ]);
 
-      console.log('Holdings data:', holdingsData);
-      console.log('Analytics data:', analyticsData);
-
       setHoldings(holdingsData);
-      setAnalytics(analyticsData);
-
-      // Transform sectors data for pie chart
-      if (analyticsData?.sectors) {
-        const sectorExposure = Object.entries(analyticsData.sectors).map(([sector, percentage]) => ({
-          sector,
-          percentage: parseFloat(percentage)
-        }));
-        setSectorData(sectorExposure);
-        console.log('Sector data:', sectorExposure);
-      }
-    } catch (err: any) {
-      console.error('Portfolio data fetch error:', {
-        message: err.message,
-        response: err.response?.data,
-        status: err.response?.status
-      });
-      toast.error(`Failed to load portfolio data: ${err.response?.data?.message || err.message}`);
+      setAnalytics({ ...analyticsData, cagr: cagrData?.cagr });
+      setSectorData(sectorExposure);
+    } catch (err) {
+      toast.error('Failed to load portfolio data');
     } finally {
       setIsLoading(false);
     }
@@ -155,9 +134,8 @@ const PortfolioDetails: React.FC = () => {
           </button>
         </div>
       ), { duration: 1000 });
-    } catch (err: any) {
-      console.error('Add holding error:', err.response?.data || err.message);
-      toast.error(`Failed to add holding: ${err.response?.data?.message || err.message}`);
+    } catch (err) {
+      toast.error('Failed to add holding');
     } finally {
       setIsSubmitting(false);
     }
@@ -193,9 +171,8 @@ const PortfolioDetails: React.FC = () => {
           </button>
         </div>
       ), { duration: 1000 });
-    } catch (err: any) {
-      console.error('Delete holding error:', err.response?.data || err.message);
-      toast.error(`Failed to delete holding: ${err.response?.data?.message || err.message}`);
+    } catch (err) {
+      toast.error('Failed to delete holding');
     } finally {
       setIsSubmitting(false);
     }
@@ -230,9 +207,8 @@ const PortfolioDetails: React.FC = () => {
           </button>
         </div>
       ), { duration: 1000 });
-    } catch (err: any) {
-      console.error('Export error:', err.response?.data || err.message);
-      toast.error(`Failed to export portfolio: ${err.response?.data?.message || err.message}`);
+    } catch (err) {
+      toast.error('Failed to export portfolio');
     }
   };
 
@@ -314,15 +290,15 @@ const PortfolioDetails: React.FC = () => {
                 <div className="flex items-center">
                   {analytics?.profitLossPercentage != null ? (
                     <>
-                      {parseFloat(analytics.profitLossPercentage) >= 0 ? (
+                      {analytics.profitLossPercentage >= 0 ? (
                         <TrendingUp className="w-5 h-5 text-green-500 mr-2" />
                       ) : (
                         <TrendingDown className="w-5 h-5 text-red-500 mr-2" />
                       )}
                       <p className={`text-2xl font-semibold ${
-                        parseFloat(analytics.profitLossPercentage) >= 0 ? 'text-green-500' : 'text-red-500'
+                        analytics.profitLossPercentage >= 0 ? 'text-green-500' : 'text-red-500'
                       }`}>
-                        {analytics.profitLossPercentage}%
+                        {formatPercentage(analytics.profitLossPercentage)}
                       </p>
                     </>
                   ) : (
@@ -338,7 +314,7 @@ const PortfolioDetails: React.FC = () => {
                 <div className="h-8 bg-gray-700 rounded animate-pulse"></div>
               ) : (
                 <p className="text-2xl font-semibold">
-                  {analytics?.CAGR || '--'}
+                  {analytics?.cagr != null ? formatPercentage(analytics.cagr) : '--'}
                 </p>
               )}
             </div>
@@ -467,7 +443,7 @@ const PortfolioDetails: React.FC = () => {
                         cx="50%"
                         cy="50%"
                         outerRadius={80}
-                        label={({ name, percent }) => `${name} ${(percent).toFixed(0)}%`}
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                       >
                         {sectorData.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -480,7 +456,7 @@ const PortfolioDetails: React.FC = () => {
                               <div className="bg-gray-800 p-3 rounded-lg border border-gray-700">
                                 <p className="text-sm text-gray-200">{payload[0].name}</p>
                                 <p className="text-sm font-semibold text-white">
-                                  {payload[0].value.toFixed(2)}%
+                                  {formatPercentage(payload[0].value)}
                                 </p>
                               </div>
                             );
