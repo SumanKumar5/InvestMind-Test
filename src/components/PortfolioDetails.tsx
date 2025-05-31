@@ -79,22 +79,41 @@ const PortfolioDetails: React.FC = () => {
 
     setIsLoading(true);
     try {
+      console.log('Fetching portfolio data for ID:', id);
+      
       const [holdingsData, analyticsData] = await Promise.all([
-        getPortfolioHoldings(id),
-        getPortfolioAnalytics(id)
+        getPortfolioHoldings(id).catch(error => {
+          console.error('Error fetching holdings:', error.response?.data || error.message);
+          throw error;
+        }),
+        getPortfolioAnalytics(id).catch(error => {
+          console.error('Error fetching analytics:', error.response?.data || error.message);
+          throw error;
+        })
       ]);
+
+      console.log('Holdings data:', holdingsData);
+      console.log('Analytics data:', analyticsData);
 
       setHoldings(holdingsData);
       setAnalytics(analyticsData);
 
       // Transform sectors data for pie chart
-      const sectorExposure = Object.entries(analyticsData.sectors).map(([sector, percentage]) => ({
-        sector,
-        percentage: parseFloat(percentage)
-      }));
-      setSectorData(sectorExposure);
-    } catch (err) {
-      toast.error('Failed to load portfolio data');
+      if (analyticsData?.sectors) {
+        const sectorExposure = Object.entries(analyticsData.sectors).map(([sector, percentage]) => ({
+          sector,
+          percentage: parseFloat(percentage)
+        }));
+        setSectorData(sectorExposure);
+        console.log('Sector data:', sectorExposure);
+      }
+    } catch (err: any) {
+      console.error('Portfolio data fetch error:', {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status
+      });
+      toast.error(`Failed to load portfolio data: ${err.response?.data?.message || err.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -136,8 +155,9 @@ const PortfolioDetails: React.FC = () => {
           </button>
         </div>
       ), { duration: 1000 });
-    } catch (err) {
-      toast.error('Failed to add holding');
+    } catch (err: any) {
+      console.error('Add holding error:', err.response?.data || err.message);
+      toast.error(`Failed to add holding: ${err.response?.data?.message || err.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -173,8 +193,9 @@ const PortfolioDetails: React.FC = () => {
           </button>
         </div>
       ), { duration: 1000 });
-    } catch (err) {
-      toast.error('Failed to delete holding');
+    } catch (err: any) {
+      console.error('Delete holding error:', err.response?.data || err.message);
+      toast.error(`Failed to delete holding: ${err.response?.data?.message || err.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -209,8 +230,9 @@ const PortfolioDetails: React.FC = () => {
           </button>
         </div>
       ), { duration: 1000 });
-    } catch (err) {
-      toast.error('Failed to export portfolio');
+    } catch (err: any) {
+      console.error('Export error:', err.response?.data || err.message);
+      toast.error(`Failed to export portfolio: ${err.response?.data?.message || err.message}`);
     }
   };
 
