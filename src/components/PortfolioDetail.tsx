@@ -97,7 +97,7 @@ const fetchData = async () => {
     setAnalytics({ ...analyticsData, cagr: cagr ?? 0 });
     setSectorData(sectorData ?? []);
   } catch (error) {
-    console.error("❌ Error loading portfolio data:", error);
+    console.error(" Error loading portfolio data:", error);
     toast.error('Failed to load portfolio data. Please try again.');
   } finally {
     setIsLoading(false);
