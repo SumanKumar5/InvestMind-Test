@@ -1,23 +1,4 @@
-export interface Holding {
-  id: string;
-  symbol: string;
-  companyName: string;
-  quantity: number;
-  buyPrice: number;
-  currentPrice: number;
-  marketValue: number;
-  gainLoss: number;
-  gainLossPercentage: number;
-  sector: string;
-}
-
 export interface PortfolioAnalytics {
   totalInvestment: number;
-  currentValue: number;
   profitLossPercentage: number;
-  cagr: number;
-  sectorBreakdown: {
-    sector: string;
-    percentage: number;
-  }[];
 }
