@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Portfolio from './components/Portfolio';
+import PortfolioDetails from './components/PortfolioDetails';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/:id" element={<PortfolioDetails />} />
           <Route path="/" element={
             <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
               <Header />
@@ -37,4 +39,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

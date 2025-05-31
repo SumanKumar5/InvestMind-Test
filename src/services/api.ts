@@ -49,4 +49,42 @@ export const getPortfolioAnalytics = async (portfolioId: string) => {
   return response.data;
 };
 
+// Portfolio Details API endpoints
+export const getPortfolioHoldings = async (portfolioId: string) => {
+  const response = await api.get(`/api/portfolios/${portfolioId}/holdings`);
+  return response.data;
+};
+
+export const addHolding = async (portfolioId: string, holding: {
+  symbol: string;
+  quantity: number;
+  buyPrice: number;
+  sector: string;
+}) => {
+  const response = await api.post(`/api/portfolios/${portfolioId}/holdings`, holding);
+  return response.data;
+};
+
+export const deleteHolding = async (holdingId: string) => {
+  const response = await api.delete(`/api/holdings/${holdingId}`);
+  return response.data;
+};
+
+export const getPortfolioCAGR = async (portfolioId: string) => {
+  const response = await api.get(`/api/analytics/${portfolioId}/cagr`);
+  return response.data;
+};
+
+export const getSectorExposure = async (portfolioId: string) => {
+  const response = await api.get(`/api/analytics/${portfolioId}/sector`);
+  return response.data;
+};
+
+export const exportPortfolio = async (portfolioId: string) => {
+  const response = await api.get(`/api/exports/${portfolioId}`, {
+    responseType: 'blob'
+  });
+  return response.data;
+};
+
 export default api;
